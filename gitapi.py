@@ -24,6 +24,10 @@ class GitApi(object):
 
 		if response.status_code == 422:
 			return "**Not a valid commit hash**"
+		elif response.status_code == 422:
+			return "**Repository not found**"
+		elif response.status_code != 200:
+			return "**Something went wrong**" + str(response.status_code)
 
 		data = json.loads(response.content)
 		message = ""
@@ -65,6 +69,10 @@ class GitApi(object):
 
 		if response.status_code == 422:
 			return "**Not a valid branch**"
+		elif response.status_code == 422:
+			return "**Repository not found**"
+		elif response.status_code != 200:
+			return "**Something went wrong _" + str(response.status_code) + "_**"
 
 		data = json.loads(response.content)
 		message = ""
