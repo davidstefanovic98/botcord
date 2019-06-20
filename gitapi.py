@@ -62,7 +62,6 @@ class GitApi(object):
 		else:
 			url = "https://api.github.com/repos/{user}/{repo}/branches".format(user=self.user, repo=self.repo)
 
-		print(self.user, self.passwd)
 		response = requests.get(url, auth=(self.user, self.passwd),
 		                        params={"username": self.user, "password": self.passwd})
 
