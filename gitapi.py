@@ -20,14 +20,15 @@ class GitApi(object):
 			url = "https://api.github.com/repos/{user}/{repo}/commits".format(user=self.user, passwd=self.passwd,
 			                                                                  repo=self.repo)
 
-		response = requests.get(url, params={"username": self.user, "password": self.passwd})
+		response = requests.get(url, auth=(self.user, self.passwd),
+		                        params={"username": self.user, "password": self.passwd})
 
 		if response.status_code == 422:
 			return "**Not a valid commit hash**"
-		elif response.status_code == 422:
+		elif response.status_code == 404:
 			return "**Repository not found**"
 		elif response.status_code != 200:
-			return "**Something went wrong**" + str(response.status_code)
+			return "**Something went wrong _" + str(response.status_code) + "_**"
 
 		data = json.loads(response.content)
 		message = ""
@@ -56,20 +57,18 @@ class GitApi(object):
 
 	def get_branch(self, branch=None) -> str:
 		if branch is not None:
-			url = "https://api.github.com/repos/{user}/{repo}/branches/{branch}".format(user=self.user,
-			                                                                            passwd=self.passwd,
-			                                                                            repo=self.repo, branch=branch)
+			url = "https://api.github.com/repos/{user}/{repo}/branches/{branch}".format(user=self.user, repo=self.repo,
+			                                                                            branch=branch)
 		else:
-			url = "https://api.github.com/repos/{user}/{repo}/branches".format(user=self.user, passwd=self.passwd,
-			                                                                   repo=self.repo)
+			url = "https://api.github.com/repos/{user}/{repo}/branches".format(user=self.user, repo=self.repo)
 
-		response = requests.get(url, params={"username": self.user, "password": self.passwd})
-
-		print(response.status_code)
+		print(self.user, self.passwd)
+		response = requests.get(url, auth=(self.user, self.passwd),
+		                        params={"username": self.user, "password": self.passwd})
 
 		if response.status_code == 422:
 			return "**Not a valid branch**"
-		elif response.status_code == 422:
+		elif response.status_code == 404:
 			return "**Repository not found**"
 		elif response.status_code != 200:
 			return "**Something went wrong _" + str(response.status_code) + "_**"
