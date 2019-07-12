@@ -89,7 +89,7 @@ class JoniBot(discord.Client):
 			await message.delete()
 			await message.channel.send("**GG, {} subscribed to {} github repository**".format(user, repo))
 		else:
-			message.delete()
+			await message.delete()
 			await message.channel.send("**Invalid subscription arguments**")
 
 	async def unsubscribe(self, message):
