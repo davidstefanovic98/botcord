@@ -97,7 +97,7 @@ class JoniBot(discord.Client):
 		repo = self.subs[user_id]["repo"]
 		del self.subs[user_id]
 		await message.delete()
-		await message.channel.send("**{} unsubscribed fron {}**".format(message.author, repo))
+		await message.channel.send("**{} unsubscribed from {}**".format(message.author, repo))
 
 
 client = JoniBot()
