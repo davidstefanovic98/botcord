@@ -1,3 +1,4 @@
+import re
 from os import remove
 from typing import List
 
@@ -8,12 +9,14 @@ from configparser import ConfigParser
 from FileMessage import FileMessage
 from colors import get_colors
 from logger import init_system_logger
+from member import member_join_notify
 
 cfg_file_path = "auth.cfg"
 
 
 class JoniBot(discord.Client):
 	token = None
+	channels = []
 
 	def __init__(self, *args, **kwargs):
 		self.config = ConfigParser()
@@ -24,8 +27,12 @@ class JoniBot(discord.Client):
 
 		self.run(self.token)
 
+	async def on_voice_state_update(self, member, before, after):
+		await member_join_notify(member, before, after, self.channels)
+
 	async def on_ready(self):
 		print('Logged on as {0}!'.format(self.user))
+		self.channels = [x for x in self.get_all_channels()]
 
 	async def on_message(self, message):
 		if self.user == message.author:
