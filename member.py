@@ -1,14 +1,15 @@
 import re
 from datetime import datetime, timedelta
 
+from discord import Embed
+
 joins = {}
 
 
 async def member_join_notify(member, before, after, channels):
-	channel = after.channel
-	match = re.search("(\\w+)-voice.*", channel.name)
+	match = re.search("(\\w+)-voice.*", after.channel.name)
 	prefix = match.group(1)
-	dest_channel = list(filter(lambda x: x.name.startswith(prefix + "-text"), channels))[0]
+	dest_channel = list(filter(lambda x: x.name.startswith(prefix + "-joined"), channels))[0]
 
 	member_id = str(member.id) + "-" + after.channel.name
 	last_join_time = joins.get(member_id)
@@ -19,5 +20,14 @@ async def member_join_notify(member, before, after, channels):
 			return
 
 	if dest_channel is not None and before.channel is None:
-		await dest_channel.send(f"**{member.name.split('#')[0]}** joined **{after.channel.name}** 🖐")
+		try:
+			embed = Embed()
+			embed.title = f"**{member.display_name}** joined **{after.channel.name}** 🖐"
+			embed.set_thumbnail(url=member.avatar_url)
+			embed.set_author(name="Joni Bot")
+			embed.timestamp = datetime.now()
+			embed.colour = member.colour
+			await dest_channel.send(embed=embed)
+		except Exception as e:
+			print(e)
 	print(joins)
