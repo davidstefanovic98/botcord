@@ -88,6 +88,9 @@ class Botcord(discord.Client):
 
                 elif len(args) == 2:
                     await message.channel.send(git.get_branch())
+        elif args[0] == "help":
+            await self.display_help(message)
+            return
 
     async def subscribe(self, message):
         args = message.content[1:].split(" ")
@@ -153,6 +156,25 @@ class Botcord(discord.Client):
         print(colors)
         files = list(map(lambda c: FileMessage(c[0], c[1]), colors))
         await self.do_send_files(message.channel, files)
+
+    async def display_help(self, message):
+        await message.channel.send("""
+**Botcord - Discord Bot Asistent**\n
+**Dobrodošli u Botcord, vašeg ličnog Discord asistenta!\n**
+**O Botcord-u:\n**
+Botcord je Discord bot koji vam pomaže u upravljanju vašim serverom i pruža različite funkcionalnosti. 
+Da biste započeli, upišite jednu od sledećih komandi:\n\n
+**Komande bota:\n**
+* **$git sub** ili **$git subscribe** <username_sa_github-a> <repo na koji zelite da se subscribujete>. Kreira webhook, preko cega ce Github slati notifikacije na on push.
+* **$git unsub** ili **$git unsubscribe** Unsubscribe sa svih repozitorijuma.
+* **$git commit** ili **$git commits** [hash commit-a] da izlista komitove na subscribovani repozitorijum. Ako se prosledi sha, prikaze se samo taj commit.
+* **$git branch** ili **$git branches** [branch name] da izlista sve remote grane jednog repozitorijuma. Ako se prosledi branch, onda se prikazuje samo taj.
+* **$help** Prikaz svih komandi koje bot podrzava.\n\n
+
+**Dodatne funkcionalnosti:**\n
+* Pretvaranja heksadecimalnog sadrzaja poruke u slicicu sa bojom koja odgovara sadrzaju. Podrzava trocifrene i sestocifrene heksadecimalne brojeve.
+* Slanja notifikacije prilikom pridruzivanja korisnika u voice-chat, ostalim korisnicima tog voice-chat-a.
+        """)
 
 
 if __name__ == '__main__':
